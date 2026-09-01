@@ -37,6 +37,15 @@ def hang():
     finally:
         db_pool.putconn(conn)
 
+
+@app.route("/health", methods=["GET", "OPTIONS"])
+def health():
+    if request.method == "OPTIONS":
+        return "", 204
+
+    return jsonify({"status": "healthy"}), 200
+
+
 @app.route("/check", methods=["POST", "OPTIONS"])
 def check():
     if request.method == "OPTIONS":
