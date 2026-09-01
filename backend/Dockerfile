@@ -22,6 +22,11 @@ RUN echo "API_KEY=sekret123" > /tmp/klucz.txt
 RUN rm /tmp/klucz.txt
 
 # Kopiujemy tylko zainstalowane pakiety, nie cały builder
+
+RUN apt-get update && apt-get install -y \
+    libpq5 \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder /root/.local /home/appuser/.local
 COPY --chown=appuser:appuser . .
 
@@ -35,4 +40,4 @@ EXPOSE 5000
 
 HEALTHCHECK --interval=30s --timeout=3s CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')" || exit 1
 
-CMD ["python", "-m", "uvicorn", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["python", "-m", "gunicorn", "-b", "0.0.0.0:5000", "app:app"]
