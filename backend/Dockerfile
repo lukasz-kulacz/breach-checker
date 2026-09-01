@@ -35,4 +35,4 @@ EXPOSE 5000
 
 HEALTHCHECK --interval=30s --timeout=3s CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')" || exit 1
 
-CMD ["python", "-m", "gunicorn", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["python", "-m", "uvicorn", "-b", "0.0.0.0:5000", "app:app"]
