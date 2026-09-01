@@ -1,6 +1,6 @@
 services:
   backend:
-    image: ghcr.io/${OWNER}/breach-checker-backend:${IMAGE_TAG}
+    image: ghcr.io/lukasz-kulacz/breach-checker-backend:${IMAGE_TAG}
     ports:
       - "8000:8000"
     environment:
