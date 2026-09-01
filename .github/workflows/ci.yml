@@ -56,39 +56,23 @@ jobs:
           docker push ghcr.io/${{ github.repository_owner }}/breach-checker-backend:${{ github.sha }}
           docker push ghcr.io/${{ github.repository_owner }}/breach-checker-backend:latest
 
-
   verify-image-runs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Zaloguj się do GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pobierz opublikowany obraz
-        run: docker pull ghcr.io/${{ github.repository_owner }}/breach-checker-backend:${{ github.sha }}
-
-      - name: Uruchom bazę danych
-        run: docker compose up -d db
-
-      - name: Uruchom kontener tymczasowo
+      - name: Uruchom obraz razem z bazą danych
         env:
-          DB_HOST: db
-          POSTGRES_USER: breach_checker
-          POSTGRES_PASSWORD: test_password
-          POSTGRES_DB: breach_checker_test
-        run: docker run --rm -d -p 5000:5000 --name backend-verify ghcr.io/${{ github.repository_owner }}/breach-checker-backend:${{ github.sha }}
+          OWNER: ${{ github.repository_owner }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: docker compose -f docker-compose.verify.yml up -d
 
       - name: Sprawdź, czy usługa odpowiada
         run: |
           sleep 3
-          curl --fail http://localhost:5000/health
+          curl --fail http://localhost:8000/health
 
-      - name: Zatrzymaj kontener
+      - name: Posprzątaj (kontenery i wolumeny)
         if: always()
-        run: docker stop backend-verify
+        run: docker compose -f docker-compose.verify.yml down -v
