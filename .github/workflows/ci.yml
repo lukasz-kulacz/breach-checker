@@ -60,6 +60,13 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
+      - name: Zaloguj się do GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Pobierz opublikowany obraz
         run: docker pull ghcr.io/${{ github.repository_owner }}/breach-checker-backend:${{ github.sha }}
 
