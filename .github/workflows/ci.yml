@@ -78,7 +78,7 @@ jobs:
       - name: Sprawdź, czy usługa odpowiada
         run: |
           sleep 3
-          curl --fail http://localhost:8000/health
+          curl --fail http://localhost:5000/health
 
       - name: Posprzątaj (kontenery i wolumeny)
         if: always()

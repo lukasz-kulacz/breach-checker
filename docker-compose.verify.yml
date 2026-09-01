@@ -2,9 +2,12 @@ services:
   backend:
     image: ghcr.io/lukasz-kulacz/breach-checker-backend:${IMAGE_TAG}
     ports:
-      - "8000:8000"
+      - "5000:5000"
     environment:
-      DATABASE_URL: postgresql://breach_checker:test_password@db:5432/breach_checker_test
+      DB_HOST: db
+      DB_NAME: breach_checker_test
+      DB_USER: breach_checker
+      DB_PASSWORD: test_password
     depends_on:
       db:
         condition: service_healthy
