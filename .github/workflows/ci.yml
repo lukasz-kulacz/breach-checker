@@ -54,3 +54,23 @@ jobs:
         run: |
           docker push ghcr.io/${{ github.repository_owner }}/breach-checker-backend:${{ github.sha }}
           docker push ghcr.io/${{ github.repository_owner }}/breach-checker-backend:latest
+
+
+  verify-image-runs:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pobierz opublikowany obraz
+        run: docker pull ghcr.io/${{ github.repository_owner }}/breach-checker-backend:${{ github.sha }}
+
+      - name: Uruchom kontener tymczasowo
+        run: docker run --rm -d -p 8000:8000 --name backend-verify ghcr.io/${{ github.repository_owner }}/breach-checker-backend:${{ github.sha }}
+
+      - name: Sprawdź, czy usługa odpowiada
+        run: |
+          sleep 3
+          curl --fail http://localhost:8000/health
+
+      - name: Zatrzymaj kontener
+        if: always()
+        run: docker stop backend-verify
