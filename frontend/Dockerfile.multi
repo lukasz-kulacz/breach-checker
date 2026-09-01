@@ -1,0 +1,9 @@
+FROM node:alpine AS builder
+RUN apk add --no-cache nodejs npm && npm install -g htmlhint
+COPY . /usr/share/nginx/html
+RUN htmlhint /usr/share/nginx/html/index.html
+
+# Etap 2: właściwy obraz 
+FROM nginx:alpine
+COPY --from=builder /usr/share/nginx/html /usr/share/nginx/html
+EXPOSE 80

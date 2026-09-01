@@ -1,0 +1,24 @@
+name: backend-ci
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Zbuduj obraz backendu
+        run: docker compose -f docker-compose.dev.yml build backend
+
+      - name: Uruchom bazę danych
+        run: docker compose -f docker-compose.dev.yml up -d db
+
+      - name: Uruchom testy
+        run: docker compose -f docker-compose.dev.yml run --rm backend pytest
+
+      - name: Posprzątaj (kontenery i wolumeny)
+        if: always()
+        run: docker compose -f docker-compose.dev.yml down -v

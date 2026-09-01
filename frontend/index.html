@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Breach Checker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>Breach Checker</h1>
+    <p class="subtitle">Sprawdź, czy hasło pojawia się w znanej próbce wycieków.</p>
+
+    <form id="check-form">
+      <label for="password">Hasło</label>
+      <input type="password" id="password" name="password" placeholder="Wpisz hasło do sprawdzenia" required>
+      <button type="submit">Sprawdź</button>
+    </form>
+
+    <p id="result" class="result"></p>
+
+    <p class="note">Wersja demonstracyjna — logika sprawdzania zostanie dodana w kolejnych laboratoriach.</p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
